@@ -106,11 +106,11 @@ The decoder takes command line arguments in the same manner as the encoder, and 
 Compression Test Results
 ========================
 
-| file name	| raw file size	| compressed file size	| decompressed matches raw file size? |
-| --- | --- | --- | ---|
-| cats1		| 491 b			| 289 b					| yes |
-| cats2		| 1,866 b		| 534 b					| yes |
-| long_file	| 7,924 b		| 4,219 b				| yes |
+| file name	| raw file size	| compressed file size	| decompressed matches raw file size?	|
+| --------- | ------------- | --------------------- | ------------------------------------- |
+| cats1		| 491 b			| 289 b					| yes									|
+| cats2		| 1,866 b		| 534 b					| yes 									|
+| long_file	| 7,924 b		| 4,219 b				| yes 									|
 
 
 
