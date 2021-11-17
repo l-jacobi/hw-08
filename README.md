@@ -74,6 +74,7 @@ encoder.cc & decoder.cc
 
 ### encoder.cc
 The encoder takes command line arguments as names of files. If one or more files are passed, for each of the files, the encoder:
+
 	1. sets up the istream to read symbols from the raw file, and the ostream to write symbols to the compressed file
 	2. Creates a Huffman object for encoding and a BitOutput object for writing bits to the ofstream object
 	3. Sets the current symbol to 0; this ensures that 0 doesn't somehow get initialized as the EOF character
