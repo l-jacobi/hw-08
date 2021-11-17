@@ -1,11 +1,11 @@
-# csci-221-hw-08\
+# csci-221-hw-08
 
 Makefile changes
 ================
 
 Makefile was mostly the same, save for:
-- htree.o had to be added to a few of the test function rules\
-- clean was modified to remove all .comp and .plaintext files\
+- htree.o had to be added to a few of the test function rules
+- clean was modified to remove all .comp and .plaintext files
 - CXX had to be set to g++, not g++-8
 
 
@@ -13,22 +13,22 @@ Makefile was mostly the same, save for:
 huffman.hh & huffman.cc
 =======================
 
-Huffman.cc is fairly well doccumented by comments, but here's an overview:\
+Huffman.cc is fairly well doccumented by comments, but here's an overview:
 
 Huffman essentially follows the steps given on Moodle. It has two private data members:
  - freq_ is the frequency table of the symbols, where the ascii number of a symbol is its place in the vector
  - decoding_tree_ is the tree which is used to decode bits, see decode()\
 It also has one private member function:
- - planter() is a very cleverly named function which creates an HTree used to decode, see decode()\
-\
+ - planter() is a very cleverly named function which creates an HTree used to decode, see decode()
+
 Huffman's functions are:
- - the constructor, which sets the size of the frequency table and initializes it to the proper values, as well as setting decoding_tree_ to nullptr\
+ - the constructor, which sets the size of the frequency table and initializes it to the proper values, as well as setting decoding_tree_ to nullptr
     > I used to use `std::fill(freq_.begin(), freq_.end(), 0)`, which took me about 36 hours to figure out was causing me problems and is the primary reason this assignment was late
  - planter, which creates a tree of all symbols based on the frequency table according to the steps given on moodle. 
  - encode(), which encodes a symbol into a vector of bits according to the steps given on moodle and updates the frequency of the symbol it decodes
- - decode, which is used to decode symbols one bit at a time. it constructs a tree based on the current frequency of symbols, then goes down the tree according to the bits it is given until it reaches a leaf which holds a symbol, returns the symbol, then updates the frequency table and resets the decoding tree. if it does not find a symbol, it returns a negative key.\
-\
-Huffman.cc has a debug version commented out below it, where it prints various things which were sometimes helpful in debugging it. The cout statements are commented out, as it was last used in the final build.\
+ - decode, which is used to decode symbols one bit at a time. it constructs a tree based on the current frequency of symbols, then goes down the tree according to the bits it is given until it reaches a leaf which holds a symbol, returns the symbol, then updates the frequency table and resets the decoding tree. if it does not find a symbol, it returns a negative key.
+
+Huffman.cc has a debug version commented out below it, where it prints various things which were sometimes helpful in debugging it. The cout statements are commented out, as it was last used in the final build.
 
 
 
@@ -42,17 +42,17 @@ In bitio.hh,
 - char_int_t is defined as uint8_t to be efficient with space and make for easy editing if CHAR_BIT changes, as char_int_t is used for the size of symbols that are being decoded throughout bitio.hh and bitio.cc in both BitInput and BitOutput. Ideally this would dynamically change based off of what BIT_SIZE is and would be equal to something like `uint(CHAR_BIT)_t`, where `(CHAR_BIT)` is replaced by whatever `CHAR_BIT` is.
 - there are 3 private data members for both BitInput and BitOutput which are described in the constructors of their classes
 
-### BitInput in bitio.cc:\
-BitInput():\
+### BitInput in bitio.cc:
+BitInput():
 	- The constructor sets up the istream to be what is passed to it, sets symbol_ to begin with the first symbol of the istream, and sets the bit offset to 1, meaning the first bit will be written in the 8s place
 input_bit():
 	- This function takes a symbol from the istream and returns a bit of it every time it is called, then moves to the next symbol once a symbol is finished. The process is something like this:
-		1. make sure is_ can be read from
-		2. if the symbol is finished being read (determined by `bit_offset_ > CHAR_BIT`, i.e. bits would be being read from a binary place larger than the size of the symbols), move to the next symbol in instream
-		3. create a "mask" with a 1 in the binary place where you want to read bits from and all other bits are 0s, then compare with symbol using bitwise and to see if symbol has a 1 there
-		4. increase the bit offset so next time, the next bit is read
-		5. return the bit in the placce being checked
-		It's important to note that this function reads bits starting from the left side of the symbol's binary representation.
+	1. make sure is_ can be read from
+	2. if the symbol is finished being read (determined by `bit_offset_ > CHAR_BIT`, i.e. bits would be being read from a binary place larger than the size of the symbols), move to the next symbol in instream
+	3. create a "mask" with a 1 in the binary place where you want to read bits from and all other bits are 0s, then compare with symbol using bitwise and to see if symbol has a 1 there
+	4. increase the bit offset so next time, the next bit is read
+	5. return the bit in the placce being checked
+	It's important to note that this function reads bits starting from the left side of the symbol's binary representation.
 
 ### BitOutput in bitio.cc
 BitOutput():
@@ -60,12 +60,12 @@ BitOutput():
 ~BitOutput():
 	- The desctructor ensures that the last symbol being written into is finished and therefore written to the ostream. If not, it "finishes" the rest of the bits with trailing zeroes and writies it to the ostream. It's important to note the zeroes are trailing as BitOutput writes bits from left to right per character and BitInput writes bites left to right per character as well.
 output_bit():\
-	The function takes a bit at a time as arguments and creates a symbol once it has a CHAR_BIT amount of them, then writes it to the ostream. It does this by:\
-		1. make sure os_ can be written to
-		2. shift all currently written bits left once so that there is space for the new bit in the 2s place
-		3. add the new bit to the 2s place using bitwise or
-		3. add one to the count of bits written to the current symbol
-		4. if all `CHAR_BIT` number of bits have been written (here it would be 8), then the symbol is finished, so write it to the ostream and reset both the counter of bits written and the current symbol to 0
+	- The function takes a bit at a time as arguments and creates a symbol once it has a CHAR_BIT amount of them, then writes it to the ostream. It does this by:\
+	1. make sure os_ can be written to
+	2. shift all currently written bits left once so that there is space for the new bit in the 2s place
+	3. add the new bit to the 2s place using bitwise or
+	3. add one to the count of bits written to the current symbol
+	4. if all `CHAR_BIT` number of bits have been written (here it would be 8), then the symbol is finished, so write it to the ostream and reset both the counter of bits written and the current symbol to 0
 
 
 
